@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
+import android.util.SparseArray;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -20,11 +22,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.google.android.gms.vision.barcode.Barcode;
+
+import java.util.List;
+
+import info.androidhive.barcode.BarcodeReader;
+
 import static android.Manifest.permission.CAMERA;
 import static android.Manifest.permission.READ_CONTACTS;
 
 public class NavigationActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, BarcodeReader.BarcodeReaderListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -147,5 +155,30 @@ public class NavigationActivity extends AppCompatActivity
             }
 
         }
+    }
+
+    @Override
+    public void onScanned(Barcode barcode) {
+        Log.d("main",barcode.displayValue);
+    }
+
+    @Override
+    public void onScannedMultiple(List<Barcode> barcodes) {
+
+    }
+
+    @Override
+    public void onBitmapScanned(SparseArray<Barcode> sparseArray) {
+
+    }
+
+    @Override
+    public void onScanError(String errorMessage) {
+
+    }
+
+    @Override
+    public void onCameraPermissionDenied() {
+
     }
 }

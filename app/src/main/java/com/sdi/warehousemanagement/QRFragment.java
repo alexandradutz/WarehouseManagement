@@ -25,7 +25,7 @@ import info.androidhive.barcode.BarcodeReader;
  * Use the {@link QRFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class QRFragment extends Fragment implements BarcodeReader.BarcodeReaderListener {
+public class QRFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -101,31 +101,6 @@ public class QRFragment extends Fragment implements BarcodeReader.BarcodeReaderL
     public void onDetach() {
         super.onDetach();
         m_navActivity = null;
-    }
-
-    @Override
-    public void onScanned(Barcode barcode) {
-        Toast.makeText(m_navActivity,barcode.displayValue,Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onScannedMultiple(List<Barcode> barcodes) {
-
-    }
-
-    @Override
-    public void onBitmapScanned(SparseArray<Barcode> sparseArray) {
-
-    }
-
-    @Override
-    public void onScanError(String errorMessage) {
-
-    }
-
-    @Override
-    public void onCameraPermissionDenied() {
-
     }
 
     /**
