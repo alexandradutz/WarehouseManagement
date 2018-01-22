@@ -1,4 +1,4 @@
-package com.sdi.warehousemanagement;
+package com.sdi.warehousemanagement.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -10,10 +10,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.sdi.warehousemanagement.activity.MyItemRecyclerViewAdapter;
+import com.sdi.warehousemanagement.R;
 import com.sdi.warehousemanagement.dummy.DummyContent;
 import com.sdi.warehousemanagement.dummy.DummyContent.DummyItem;
-
-import java.util.List;
 
 /**
  * A fragment representing a list of Items.

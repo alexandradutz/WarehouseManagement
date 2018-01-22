@@ -1,4 +1,4 @@
-package com.sdi.warehousemanagement;
+package com.sdi.warehousemanagement.activity;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -6,7 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.sdi.warehousemanagement.ItemFragment.OnListFragmentInteractionListener;
+import com.sdi.warehousemanagement.R;
+import com.sdi.warehousemanagement.fragment.ItemFragment.OnListFragmentInteractionListener;
 import com.sdi.warehousemanagement.dummy.DummyContent.DummyItem;
 
 import java.util.List;

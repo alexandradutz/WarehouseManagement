@@ -1,4 +1,4 @@
-package com.sdi.warehousemanagement;
+package com.sdi.warehousemanagement.activity;
 
 import android.annotation.TargetApi;
 import android.support.v4.app.Fragment;
@@ -23,6 +23,10 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.google.android.gms.vision.barcode.Barcode;
+import com.sdi.warehousemanagement.R;
+import com.sdi.warehousemanagement.fragment.HomeFragment;
+import com.sdi.warehousemanagement.fragment.ItemFragment;
+import com.sdi.warehousemanagement.fragment.QRFragment;
 
 import java.util.List;
 

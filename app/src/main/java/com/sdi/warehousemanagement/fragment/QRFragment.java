@@ -1,18 +1,15 @@
-package com.sdi.warehousemanagement;
+package com.sdi.warehousemanagement.fragment;
 
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
-import com.google.android.gms.vision.barcode.Barcode;
-
-import java.util.List;
+import com.sdi.warehousemanagement.activity.NavigationActivity;
+import com.sdi.warehousemanagement.R;
 
 import info.androidhive.barcode.BarcodeReader;
 
