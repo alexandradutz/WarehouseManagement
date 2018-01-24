@@ -1,1 +1,1 @@
-include ':app'
+include ':app', ':ormlite-android-5.0', ':postgresql-42.2.0'

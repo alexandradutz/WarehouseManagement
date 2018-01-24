@@ -23,7 +23,9 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.google.android.gms.vision.barcode.Barcode;
+import com.sdi.warehousemanagement.DatabaseHelper;
 import com.sdi.warehousemanagement.R;
+import com.sdi.warehousemanagement.entities.User;
 import com.sdi.warehousemanagement.fragment.HomeFragment;
 import com.sdi.warehousemanagement.fragment.ItemFragment;
 import com.sdi.warehousemanagement.fragment.QRFragment;
@@ -50,6 +52,10 @@ public class NavigationActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                System.out.println("FAB CLICK");
+                User u = new User("user", "pass", "fn", "ln");
+                DatabaseHelper dbHelper = new DatabaseHelper(NavigationActivity.this);
+//                dbHelper.getWritableDatabase().ad
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
