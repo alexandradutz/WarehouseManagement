@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/WarehouseManagement.iml" filepath="$PROJECT_DIR$/WarehouseManagement.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ormlite-android-5.0/ormlite-android-5.0.iml" filepath="$PROJECT_DIR$/ormlite-android-5.0/ormlite-android-5.0.iml" />
+      <module fileurl="file://$PROJECT_DIR$/postgresql-42.2.0/postgresql-42.2.0.iml" filepath="$PROJECT_DIR$/postgresql-42.2.0/postgresql-42.2.0.iml" />
+    </modules>
+  </component>
+</project>

@@ -1,5 +1,6 @@
 package com.sdi.warehousemanagement.activity;
 
+import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
@@ -20,6 +21,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -29,12 +31,14 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.sdi.warehousemanagement.R;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.Manifest.permission.INTERNET;
 import static android.Manifest.permission.READ_CONTACTS;
 
 /**
@@ -95,6 +99,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+        mayRequestInternet();
     }
 
     private void populateAutoComplete() {
@@ -103,6 +108,32 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
 
         getLoaderManager().initLoader(0, null, this);
+    }
+
+    private boolean mayRequestInternet() {
+        boolean permission = false;
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            permission =  true;
+        }
+        Log.d("LoginActivity","SKD OK");
+        if (checkSelfPermission(INTERNET) == PackageManager.PERMISSION_GRANTED) {
+            permission =  true;
+        }
+        Log.d("LoginActivity","No permission");
+        if (shouldShowRequestPermissionRationale(INTERNET)) {
+            Log.d("LoginActivity","Should Request");
+            Snackbar.make(mEmailView, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
+                    .setAction(android.R.string.ok, new View.OnClickListener() {
+                        @Override
+                        @TargetApi(Build.VERSION_CODES.M)
+                        public void onClick(View v) {
+                            requestPermissions(new String[]{INTERNET}, 12);
+                        }
+                    });
+        } else {
+            requestPermissions(new String[]{INTERNET}, 12);
+        }
+        return permission;
     }
 
     private boolean mayRequestContacts() {
@@ -136,6 +167,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         if (requestCode == REQUEST_READ_CONTACTS) {
             if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 populateAutoComplete();
+            }
+        }
+        if(requestCode == 12){
+            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this,"Internet permission granted",Toast.LENGTH_SHORT).show();
+            }
+            else{
+                Toast.makeText(this,"Internet permission denied",Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -336,9 +375,15 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(false);
 
             if (success) {
-                finish();
-                Intent navigation = new Intent(LoginActivity.this, NavigationActivity.class);
-                startActivity(navigation);
+                if(mayRequestInternet()) {
+                    finish();
+                    Intent navigation = new Intent(LoginActivity.this, NavigationActivity.class);
+                    startActivity(navigation);
+                }
+                else{
+                    mPasswordView.setError("App needs internet permissions");
+                    mPasswordView.requestFocus();
+                }
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();
