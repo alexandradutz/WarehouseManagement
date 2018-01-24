@@ -27,6 +27,10 @@ import java.util.List;
 
 public class Edit extends AppCompatActivity {
 
+    TextView txtQR;
+    EditText txtQuantity;
+    EditText txtName;
+    Spinner spinner;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,10 +58,10 @@ public class Edit extends AppCompatActivity {
 
 
 
-        final TextView txtQR = (TextView)findViewById(R.id.txtProd);
-        final EditText txtQuantity = (EditText)findViewById(R.id.txtQuantity);
-        final EditText txtName = (EditText)findViewById(R.id.editName);
-        final Spinner spinner = (Spinner)findViewById(R.id.spinCategory);
+        txtQR = (TextView)findViewById(R.id.txtProd);
+        txtQuantity = (EditText)findViewById(R.id.txtQuantity);
+        txtName = (EditText)findViewById(R.id.editName);
+        spinner = (Spinner)findViewById(R.id.spinCategory);
 
         Button btnSave = (Button)findViewById(R.id.txtSave);
         Button btnRemove = (Button)findViewById(R.id.txtRemove);
@@ -114,7 +118,7 @@ public class Edit extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String id = txtQR.getText().toString();
-                Entity e = new Entity(txtName.getText().toString(),"1",Integer.parseInt(txtQuantity.getText().toString()));
+                Entity e = new Entity(txtName.getText().toString(),String.valueOf(spinner.getSelectedItemPosition()),Integer.parseInt(txtQuantity.getText().toString()));
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
                 DatabaseReference myRef = database.getReference("items");
                 myRef.child(id).setValue(e);
