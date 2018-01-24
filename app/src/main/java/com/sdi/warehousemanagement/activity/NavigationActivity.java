@@ -36,6 +36,7 @@ import com.sdi.warehousemanagement.entities.User;
 import com.sdi.warehousemanagement.fragment.HomeFragment;
 import com.sdi.warehousemanagement.fragment.ItemFragment;
 import com.sdi.warehousemanagement.fragment.QRFragment;
+import com.sdi.warehousemanagement.service.Service;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -48,6 +49,7 @@ import static android.Manifest.permission.READ_CONTACTS;
 public class NavigationActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, BarcodeReader.BarcodeReaderListener {
 
+    private Service dbService = new Service(NavigationActivity.this);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,45 +63,47 @@ public class NavigationActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                System.out.println("FAB CLICK");
-                User u = new User("user", "pass", "fn", "ln");
-                DbHelper dbHelper = new DbHelper(NavigationActivity.this);
-                RuntimeExceptionDao<User, Integer> userDao = dbHelper.getUserDao();
-                RuntimeExceptionDao<Category, Integer> categoryDao = dbHelper.getCategoryDao();
-                RuntimeExceptionDao<Product, Integer> productDao = dbHelper.getProductDao();
-                RuntimeExceptionDao<Stock, Integer> stockDao = dbHelper.getStockDao();
-                List<User> list = userDao.queryForAll();
-                System.out.println("===============================");
-                for (User user : list) {
-                    System.out.println(user.toString());
-                }
-                System.out.println("=====================================");
-                userDao.create(u);
-                for (User user : list) {
-                    System.out.println(user.toString());
-                }
-                System.out.println("=====================================");
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-                Category c1 = new Category("categ");
-                categoryDao.create(c1);
-                productDao.create(new Product( "code1", "p1", 12, "" , c1));
-
-                System.out.println(categoryDao.queryForAll().toString());
-                System.out.println(productDao.queryForAll().toString());
-
-                QueryBuilder<Category, Integer> categoryQuery = categoryDao.queryBuilder();
-                QueryBuilder<Product, Integer> productQuery = productDao.queryBuilder();
-                try {
-                    productQuery.where().eq("category_id", 1);
-                    categoryQuery.join(productQuery);
-                    System.out.println(categoryQuery.query());
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-                System.out.println(productDao.queryForId(1));
-                stockDao.create(new Stock(productDao.queryForId(1), "M", 100));
-                System.out.println(stockDao.queryForAll());
+                Intent intent = new Intent(NavigationActivity.this,Edit.class);
+                startActivity(intent);
+//                System.out.println("FAB CLICK");
+//                User u = new User("user", "pass", "fn", "ln");
+//                DbHelper dbHelper = new DbHelper(NavigationActivity.this);
+//                RuntimeExceptionDao<User, Integer> userDao = dbHelper.getUserDao();
+//                RuntimeExceptionDao<Category, Integer> categoryDao = dbHelper.getCategoryDao();
+//                RuntimeExceptionDao<Product, Integer> productDao = dbHelper.getProductDao();
+//                RuntimeExceptionDao<Stock, Integer> stockDao = dbHelper.getStockDao();
+//                List<User> list = userDao.queryForAll();
+//                System.out.println("===============================");
+//                for (User user : list) {
+//                    System.out.println(user.toString());
+//                }
+//                System.out.println("=====================================");
+//                userDao.create(u);
+//                for (User user : list) {
+//                    System.out.println(user.toString());
+//                }
+//                System.out.println("=====================================");
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+//                Category c1 = new Category("categ");
+//                categoryDao.create(c1);
+//                productDao.create(new Product( "code1", "p1", 12, "" , c1));
+//
+//                System.out.println(categoryDao.queryForAll().toString());
+//                System.out.println(productDao.queryForAll().toString());
+//
+//                QueryBuilder<Category, Integer> categoryQuery = categoryDao.queryBuilder();
+//                QueryBuilder<Product, Integer> productQuery = productDao.queryBuilder();
+//                try {
+//                    productQuery.where().eq("category_id", 1);
+//                    categoryQuery.join(productQuery);
+//                    System.out.println(categoryQuery.query());
+//                } catch (SQLException e) {
+//                    e.printStackTrace();
+//                }
+//                System.out.println(productDao.queryForId(1));
+//                stockDao.create(new Stock(productDao.queryForId(1), "M", 100));
+//                System.out.println(stockDao.queryForAll());
 
             }
         });
@@ -212,11 +216,21 @@ public class NavigationActivity extends AppCompatActivity
 
     @Override
     public void onScanned(Barcode barcode) {
-        Intent intent = new Intent(this,Edit.class);
-        intent.putExtra("new_qrcode",barcode.displayValue);
-        startActivity(intent);
-        Log.d("main",barcode.displayValue);
+
+        Intent intent = new Intent(NavigationActivity.this, Edit.class);
+        Product product = dbService.getProduct(barcode.displayValue);
+        if (product != null) {
+            intent.putExtra("prodid", product.getProduct_code());
+            intent.putExtra("name", product.getName());
+            intent.putExtra("price", product.getPrice());
+            // stock
+//            intent.putExtra("category", e.getCategory());
+            startActivity(intent);
+        }
     }
+
+
+
 
     @Override
     public void onScannedMultiple(List<Barcode> barcodes) {
