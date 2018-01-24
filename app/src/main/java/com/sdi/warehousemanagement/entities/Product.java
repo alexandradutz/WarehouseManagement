@@ -21,16 +21,27 @@ public class Product {
     private String description;
     @DatabaseField(foreign = true, columnName = "category_id")
     private Category category;
+    @DatabaseField
+    private int quantity;
 
     public Product() {
     }
 
-    public Product(String product_code, String name, int price, String description, Category category) {
+    public Product(String product_code, String name, int price, String description, Category category, int quantity) {
         this.product_code = product_code;
         this.name = name;
         this.price = price;
         this.description = description;
         this.category = category;
+        this.quantity = quantity;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 
     public int getProduct_id() {

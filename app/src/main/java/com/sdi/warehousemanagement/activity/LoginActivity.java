@@ -34,6 +34,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sdi.warehousemanagement.R;
+import com.sdi.warehousemanagement.entities.User;
+import com.sdi.warehousemanagement.service.Service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,6 +52,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * Id to identity READ_CONTACTS permission request.
      */
     private static final int REQUEST_READ_CONTACTS = 0;
+    private Service dbService = new Service(LoginActivity.this);
 
     /**
      * A dummy authentication store containing known user names and passwords.
@@ -213,10 +216,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mEmailView.setError(getString(R.string.error_field_required));
             focusView = mEmailView;
             cancel = true;
-        } else if (!isEmailValid(email)) {
-            mEmailView.setError(getString(R.string.error_invalid_email));
-            focusView = mEmailView;
-            cancel = true;
         }
 
         if (cancel) {
@@ -338,18 +337,17 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      */
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 
-        private final String mEmail;
+        private final String mUsername;
         private final String mPassword;
+        private User mUser;
 
-        UserLoginTask(String email, String password) {
-            mEmail = email;
+        UserLoginTask(String user, String password) {
+            mUsername = user;
             mPassword = password;
         }
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
-
             try {
                 // Simulate network access.
                 Thread.sleep(2000);
@@ -357,16 +355,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 return false;
             }
 
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mEmail)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
-                }
+            mUser = dbService.getUserByName(mUsername);
+            if (mUser != null) {
+                return mUser.getPassword().equals(mPassword);
             }
-
-            // TODO: register the new account here.
-            return true;
+            return false;
         }
 
         @Override
@@ -378,6 +371,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 if(mayRequestInternet()) {
                     finish();
                     Intent navigation = new Intent(LoginActivity.this, NavigationActivity.class);
+                    navigation.putExtra("username", mUsername);
+                    navigation.putExtra("fullName", mUser.getFirstName() + mUser.getLastName());
                     startActivity(navigation);
                 }
                 else{

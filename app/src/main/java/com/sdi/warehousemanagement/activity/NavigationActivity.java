@@ -12,6 +12,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.util.SparseArray;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -21,6 +22,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.vision.barcode.Barcode;
@@ -53,11 +57,24 @@ public class NavigationActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+//        setContentView(R.layout.nav_header_main);
+//        EditText txtUsername = (EditText)findViewById(R.id.txtUserName);
+//        EditText txtFullname = (EditText)findViewById(R.id.txtFullName);
+//
+//        String username = getIntent().getStringExtra("username");
+//        User currentUser = dbService.getUserByName(username);
+//        if (username != null) {
+//            txtUsername.setText(getIntent().getStringExtra("username"));
+//            txtFullname.setText(getIntent().getStringExtra("fullName"));
+//        }
+
         setContentView(R.layout.activity_navigation);
         mayRequestCamera();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        Fragment fragment = new HomeFragment();
+        getSupportFragmentManager().beginTransaction().replace(R.id.content_main, fragment).commit();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -223,13 +240,15 @@ public class NavigationActivity extends AppCompatActivity
             intent.putExtra("prodid", product.getProduct_code());
             intent.putExtra("name", product.getName());
             intent.putExtra("price", product.getPrice());
-            // stock
-//            intent.putExtra("category", e.getCategory());
+            intent.putExtra("quantity", product.getQuantity());
+            intent.putExtra("category", product.getCategory().getName());
+            intent.putExtra("description", product.getDescription());
+            startActivity(intent);
+        } else {
+            intent.putExtra("new_qrcode", barcode.displayValue);
             startActivity(intent);
         }
     }
-
-
 
 
     @Override

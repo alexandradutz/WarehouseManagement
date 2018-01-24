@@ -1,5 +1,6 @@
 package com.sdi.warehousemanagement.fragment;
 
+import android.content.ClipData;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,6 +15,11 @@ import com.sdi.warehousemanagement.activity.MyItemRecyclerViewAdapter;
 import com.sdi.warehousemanagement.R;
 import com.sdi.warehousemanagement.dummy.DummyContent;
 import com.sdi.warehousemanagement.dummy.DummyContent.DummyItem;
+import com.sdi.warehousemanagement.entities.Product;
+import com.sdi.warehousemanagement.service.Service;
+
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * A fragment representing a list of Items.
@@ -28,6 +34,7 @@ public class ItemFragment extends Fragment {
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
+    private Service dbService = new Service(getActivity());
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -63,14 +70,20 @@ public class ItemFragment extends Fragment {
         // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
+            final RecyclerView recyclerView = (RecyclerView) view;
             if (mColumnCount <= 1) {
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new MyItemRecyclerViewAdapter(DummyContent.ITEMS, mListener,getActivity()));
 
+            HashMap<String, Product> products = new HashMap<>();
+
+            List<Product> prodList = dbService.getAllProducts();
+            for(Product p : prodList) {
+                products.put(p.getProduct_code(), p);
+            }
+            recyclerView.setAdapter(new MyItemRecyclerViewAdapter(products, mListener, getActivity()));
         }
         return view;
     }

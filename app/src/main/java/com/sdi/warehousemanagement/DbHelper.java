@@ -50,10 +50,9 @@ public class DbHelper extends OrmLiteSqliteOpenHelper {
 //            TableUtils.dropTable(connectionSource, Product.class, true);
 //            TableUtils.dropTable(connectionSource, Category.class, true);
 
-            TableUtils.createTable(connectionSource, User.class);
-            TableUtils.createTable(connectionSource, Category.class);
-            TableUtils.createTable(connectionSource, Product.class);
-            TableUtils.createTable(connectionSource, Stock.class);
+            TableUtils.createTableIfNotExists(connectionSource, User.class);
+            TableUtils.createTableIfNotExists(connectionSource, Category.class);
+            TableUtils.createTableIfNotExists(connectionSource, Product.class);
 
         } catch (SQLException e) {
             Log.e(DbHelper.class.getName(), "Can't create database", e);
@@ -65,6 +64,13 @@ public class DbHelper extends OrmLiteSqliteOpenHelper {
         // create some entries in the onCreate
         User user = new User("user", "pass", "hshs", "hjsjs");
         dao.create(user);
+        Category categ = new Category("Snowboard");
+        getCategoryDao().create(categ);
+        getCategoryDao().create(new Category("Ski"));
+        getCategoryDao().create(new Category("Streetwear"));
+        getProductDao().create(new Product("1234", "Burton", 500, "da best", categ, 10));
+        getUserDao().create(new User("patri", "admin", "Patrikia", "Damian"));
+        getUserDao().create(new User("admin", "admin", "Patrikia", "Damian"));
     }
 
     /**
@@ -76,7 +82,6 @@ public class DbHelper extends OrmLiteSqliteOpenHelper {
         try {
             Log.i(DbHelper.class.getName(), "onUpgrade");
             TableUtils.dropTable(connectionSource, User.class, true);
-            TableUtils.dropTable(connectionSource, Stock.class, true);
             TableUtils.dropTable(connectionSource, Product.class, true);
             TableUtils.dropTable(connectionSource, Category.class, true);
             // after we drop the old databases, we create the new ones
