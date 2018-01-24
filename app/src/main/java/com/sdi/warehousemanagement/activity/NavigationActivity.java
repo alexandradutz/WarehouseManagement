@@ -1,6 +1,7 @@
 package com.sdi.warehousemanagement.activity;
 
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.content.pm.PackageManager;
@@ -47,6 +48,7 @@ public class NavigationActivity extends AppCompatActivity
         mayRequestCamera();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -169,6 +171,9 @@ public class NavigationActivity extends AppCompatActivity
 
     @Override
     public void onScanned(Barcode barcode) {
+        Intent intent = new Intent(this,Edit.class);
+        intent.putExtra("new_qrcode",barcode.displayValue);
+        startActivity(intent);
         Log.d("main",barcode.displayValue);
     }
 

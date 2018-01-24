@@ -1,5 +1,7 @@
 package com.sdi.warehousemanagement.activity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,10 +23,12 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
 
     private final List<DummyItem> mValues;
     private final OnListFragmentInteractionListener mListener;
+    private Context mContext;
 
-    public MyItemRecyclerViewAdapter(List<DummyItem> items, OnListFragmentInteractionListener listener) {
+    public MyItemRecyclerViewAdapter(List<DummyItem> items, OnListFragmentInteractionListener listener, Context context) {
         mValues = items;
         mListener = listener;
+        this.mContext = context;
     }
 
     @Override
@@ -49,6 +53,8 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
                     // fragment is attached to one) that an item has been selected.
                     mListener.onListFragmentInteraction(holder.mItem);
                 }
+                Intent intent = new Intent(mContext,Edit.class);
+                mContext.startActivity(intent);
             }
         });
     }
