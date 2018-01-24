@@ -8,10 +8,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.sdi.warehousemanagement.Entity;
 import com.sdi.warehousemanagement.R;
 import com.sdi.warehousemanagement.fragment.ItemFragment.OnListFragmentInteractionListener;
 import com.sdi.warehousemanagement.dummy.DummyContent.DummyItem;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -21,11 +24,11 @@ import java.util.List;
  */
 public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecyclerViewAdapter.ViewHolder> {
 
-    private final List<DummyItem> mValues;
+    private final HashMap<String,Entity> mValues;
     private final OnListFragmentInteractionListener mListener;
     private Context mContext;
 
-    public MyItemRecyclerViewAdapter(List<DummyItem> items, OnListFragmentInteractionListener listener, Context context) {
+    public MyItemRecyclerViewAdapter(HashMap<String,Entity> items, OnListFragmentInteractionListener listener, Context context) {
         mValues = items;
         mListener = listener;
         this.mContext = context;
@@ -40,20 +43,21 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).id);
-        holder.mContentView.setText(mValues.get(position).content);
-        holder.mQuantityView.setText(mValues.get(position).quantity);
+        List<String> keys = new ArrayList<>(mValues.keySet());
+        final String prodID = keys.get(position);
+        holder.mItem = mValues.get(prodID);
+        holder.mIdView.setText(prodID);
+        holder.mContentView.setText(mValues.get(prodID).getName());
+        holder.mQuantityView.setText(String.valueOf(mValues.get(prodID).getQuantity()));
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (null != mListener) {
-                    // Notify the active callbacks interface (the activity, if the
-                    // fragment is attached to one) that an item has been selected.
-                    mListener.onListFragmentInteraction(holder.mItem);
-                }
                 Intent intent = new Intent(mContext,Edit.class);
+                intent.putExtra("prodid",prodID);
+                intent.putExtra("name",holder.mItem.getName());
+                intent.putExtra("quantity",holder.mItem.getQuantity());
+                intent.putExtra("category",holder.mItem.getCategory());
                 mContext.startActivity(intent);
             }
         });
@@ -61,7 +65,7 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
 
     @Override
     public int getItemCount() {
-        return mValues.size();
+        return mValues.keySet().size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -69,7 +73,7 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
         public final TextView mIdView;
         public final TextView mContentView;
         public final TextView mQuantityView;
-        public DummyItem mItem;
+        public Entity mItem;
 
         public ViewHolder(View view) {
             super(view);

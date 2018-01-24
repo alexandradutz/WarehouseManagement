@@ -24,13 +24,18 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.google.android.gms.vision.barcode.Barcode;
-import com.sdi.warehousemanagement.DatabaseHelper;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.sdi.warehousemanagement.Entity;
 import com.sdi.warehousemanagement.R;
-import com.sdi.warehousemanagement.entities.User;
 import com.sdi.warehousemanagement.fragment.HomeFragment;
 import com.sdi.warehousemanagement.fragment.ItemFragment;
 import com.sdi.warehousemanagement.fragment.QRFragment;
 
+import java.util.HashMap;
 import java.util.List;
 
 import info.androidhive.barcode.BarcodeReader;
@@ -54,12 +59,8 @@ public class NavigationActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                System.out.println("FAB CLICK");
-                User u = new User("user", "pass", "fn", "ln");
-                DatabaseHelper dbHelper = new DatabaseHelper(NavigationActivity.this);
-//                dbHelper.getWritableDatabase().ad
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent intent = new Intent(NavigationActivity.this,Edit.class);
+                startActivity(intent);
             }
         });
 
@@ -170,10 +171,42 @@ public class NavigationActivity extends AppCompatActivity
     }
 
     @Override
-    public void onScanned(Barcode barcode) {
-        Intent intent = new Intent(this,Edit.class);
-        intent.putExtra("new_qrcode",barcode.displayValue);
-        startActivity(intent);
+    public void onScanned(final Barcode barcode) {
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        final DatabaseReference myRef = database.getReference("items");
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                boolean found = false;
+                Intent intent = new Intent(NavigationActivity.this,Edit.class);
+                for(DataSnapshot child : dataSnapshot.getChildren() ){
+                    String key = child.getKey();
+                    if(key.compareTo(barcode.displayValue)==0){
+                        Entity e = child.getValue(Entity.class);
+                        intent.putExtra("prodid",key);
+                        intent.putExtra("name",e.getName());
+                        intent.putExtra("quantity",e.getQuantity());
+                        intent.putExtra("category",e.getCategory());
+                        found = true;
+                        startActivity(intent);
+
+                        break;
+                    }
+                }
+                if(!found){
+
+                    intent.putExtra("new_qrcode",barcode.displayValue);
+                    startActivity(intent);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
         Log.d("main",barcode.displayValue);
     }
 

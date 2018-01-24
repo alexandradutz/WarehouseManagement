@@ -33,6 +33,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.sdi.warehousemanagement.R;
 
 import java.util.ArrayList;
@@ -100,6 +102,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
         mayRequestInternet();
+
+
     }
 
     private void populateAutoComplete() {

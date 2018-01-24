@@ -6,14 +6,23 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.sdi.warehousemanagement.Entity;
 import com.sdi.warehousemanagement.activity.MyItemRecyclerViewAdapter;
 import com.sdi.warehousemanagement.R;
 import com.sdi.warehousemanagement.dummy.DummyContent;
 import com.sdi.warehousemanagement.dummy.DummyContent.DummyItem;
+
+import java.util.HashMap;
 
 /**
  * A fragment representing a list of Items.
@@ -63,14 +72,34 @@ public class ItemFragment extends Fragment {
         // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
+            final RecyclerView recyclerView = (RecyclerView) view;
             if (mColumnCount <= 1) {
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new MyItemRecyclerViewAdapter(DummyContent.ITEMS, mListener,getActivity()));
 
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            final DatabaseReference myRef = database.getReference("items");
+            myRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    HashMap<String,Entity> entities = new HashMap<>();
+                    Log.d("FB","asdf");
+                    for(DataSnapshot child : dataSnapshot.getChildren() ){
+                        String key = child.getKey();
+                        Entity e = child.getValue(Entity.class);
+                        entities.put(key,e);
+                    }
+                    recyclerView.setAdapter(new MyItemRecyclerViewAdapter(entities, mListener,getActivity()));
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
         }
         return view;
     }

@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-
 android {
     compileSdkVersion 26
     buildToolsVersion "25.0.0"
@@ -29,15 +28,15 @@ dependencies {
     compile 'com.android.support:appcompat-v7:26.+'
     compile 'com.android.support:support-v4:26.+'
     compile 'com.android.support:design:26.+'
-    compile 'com.google.android.gms:play-services-vision:11.0.2'
 
-    compile 'com.j256.ormlite:ormlite-android:5.0'
-    compile 'com.j256.ormlite:ormlite-core:5.0'
-    compile 'postgresql:postgresql:9.1-901-1.jdbc4'
-
+    //compile 'com.j256.ormlite:ormlite-android:5.0'
+    //compile 'com.j256.ormlite:ormlite-core:5.0'
+    //compile 'postgresql:postgresql:9.1-901-1.jdbc4'
+    compile 'com.google.firebase:firebase-database:11.8.0'
     // barcode reader library
     implementation 'info.androidhive:barcode-reader:1.1.5'
     // google vision library
-    implementation 'com.google.android.gms:play-services-vision:11.0.2'
+    implementation 'com.google.android.gms:play-services-vision:11.8.0'
     testCompile 'junit:junit:4.12'
 }
+apply plugin: 'com.google.gms.google-services'

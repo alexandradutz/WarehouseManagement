@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "170420744762",
+    "firebase_url": "https://tpjad-d3569.firebaseio.com",
+    "project_id": "tpjad-d3569",
+    "storage_bucket": "tpjad-d3569.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:170420744762:android:5b684c079ec73b6a",
+        "android_client_info": {
+          "package_name": "com.sdi.warehousemanagement"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "170420744762-uvgkloedrguib5kh11n8tb7e1i90st1s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDPpeHwi0TxJeb4UrAyo9mucRAZwLTSpX8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
