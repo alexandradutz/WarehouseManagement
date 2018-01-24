@@ -24,13 +24,20 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.google.android.gms.vision.barcode.Barcode;
-import com.sdi.warehousemanagement.DatabaseHelper;
+import com.j256.ormlite.dao.RuntimeExceptionDao;
+import com.j256.ormlite.stmt.QueryBuilder;
+import com.j256.ormlite.stmt.query.In;
+import com.sdi.warehousemanagement.DbHelper;
 import com.sdi.warehousemanagement.R;
+import com.sdi.warehousemanagement.entities.Category;
+import com.sdi.warehousemanagement.entities.Product;
+import com.sdi.warehousemanagement.entities.Stock;
 import com.sdi.warehousemanagement.entities.User;
 import com.sdi.warehousemanagement.fragment.HomeFragment;
 import com.sdi.warehousemanagement.fragment.ItemFragment;
 import com.sdi.warehousemanagement.fragment.QRFragment;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import info.androidhive.barcode.BarcodeReader;
@@ -56,12 +63,47 @@ public class NavigationActivity extends AppCompatActivity
             public void onClick(View view) {
                 System.out.println("FAB CLICK");
                 User u = new User("user", "pass", "fn", "ln");
-                DatabaseHelper dbHelper = new DatabaseHelper(NavigationActivity.this);
-//                dbHelper.getWritableDatabase().ad
+                DbHelper dbHelper = new DbHelper(NavigationActivity.this);
+                RuntimeExceptionDao<User, Integer> userDao = dbHelper.getUserDao();
+                RuntimeExceptionDao<Category, Integer> categoryDao = dbHelper.getCategoryDao();
+                RuntimeExceptionDao<Product, Integer> productDao = dbHelper.getProductDao();
+                RuntimeExceptionDao<Stock, Integer> stockDao = dbHelper.getStockDao();
+                List<User> list = userDao.queryForAll();
+                System.out.println("===============================");
+                for (User user : list) {
+                    System.out.println(user.toString());
+                }
+                System.out.println("=====================================");
+                userDao.create(u);
+                for (User user : list) {
+                    System.out.println(user.toString());
+                }
+                System.out.println("=====================================");
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+                Category c1 = new Category("categ");
+                categoryDao.create(c1);
+                productDao.create(new Product( "code1", "p1", 12, "" , c1));
+
+                System.out.println(categoryDao.queryForAll().toString());
+                System.out.println(productDao.queryForAll().toString());
+
+                QueryBuilder<Category, Integer> categoryQuery = categoryDao.queryBuilder();
+                QueryBuilder<Product, Integer> productQuery = productDao.queryBuilder();
+                try {
+                    productQuery.where().eq("category_id", 1);
+                    categoryQuery.join(productQuery);
+                    System.out.println(categoryQuery.query());
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                System.out.println(productDao.queryForId(1));
+                stockDao.create(new Stock(productDao.queryForId(1), "M", 100));
+                System.out.println(stockDao.queryForAll());
+
             }
         });
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -116,14 +158,14 @@ public class NavigationActivity extends AppCompatActivity
 
         if (id == R.id.nav_home) {
             Fragment fragment = new HomeFragment();
-            fragmentManager.beginTransaction().replace(R.id.content_main,fragment).commit();
+            fragmentManager.beginTransaction().replace(R.id.content_main, fragment).commit();
         } else if (id == R.id.nav_list) {
             Fragment fragment = new ItemFragment();
-            fragmentManager.beginTransaction().replace(R.id.content_main,fragment).commit();
+            fragmentManager.beginTransaction().replace(R.id.content_main, fragment).commit();
 
         } else if (id == R.id.QR) {
             Fragment fragment = new QRFragment();
-            fragmentManager.beginTransaction().replace(R.id.content_main,fragment).commit();
+            fragmentManager.beginTransaction().replace(R.id.content_main, fragment).commit();
         }
 
 
@@ -160,10 +202,9 @@ public class NavigationActivity extends AppCompatActivity
                                            @NonNull int[] grantResults) {
         if (requestCode == 123) {
             if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(this,"Permission granted",Toast.LENGTH_SHORT).show();
-            }
-            else{
-                Toast.makeText(this,"Permission refused",Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Permission granted", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Permission refused", Toast.LENGTH_SHORT).show();
             }
 
         }
