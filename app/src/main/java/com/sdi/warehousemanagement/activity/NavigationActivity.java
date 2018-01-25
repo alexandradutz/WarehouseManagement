@@ -1,6 +1,8 @@
 package com.sdi.warehousemanagement.activity;
 
 import android.annotation.TargetApi;
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -24,6 +26,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -150,6 +153,29 @@ public class NavigationActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+        SearchManager searchManager = (SearchManager)
+                getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
+
+        searchView.setSearchableInfo(searchManager.
+                getSearchableInfo(getComponentName()));
+        searchView.setSubmitButtonEnabled(true);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                ItemFragment frg = (ItemFragment) fragmentManager.findFragmentByTag("ITEM");
+                if(frg!=null)
+                    frg.filterSearch(s);
+                return false;
+            }
+        });
+
         return true;
     }
 
@@ -179,14 +205,14 @@ public class NavigationActivity extends AppCompatActivity
 
         if (id == R.id.nav_home) {
             Fragment fragment = new HomeFragment();
-            fragmentManager.beginTransaction().replace(R.id.content_main, fragment).commit();
+            fragmentManager.beginTransaction().replace(R.id.content_main, fragment,"HOME").commit();
         } else if (id == R.id.nav_list) {
             Fragment fragment = new ItemFragment();
-            fragmentManager.beginTransaction().replace(R.id.content_main, fragment).commit();
+            fragmentManager.beginTransaction().replace(R.id.content_main, fragment,"ITEM").commit();
 
         } else if (id == R.id.QR) {
             Fragment fragment = new QRFragment();
-            fragmentManager.beginTransaction().replace(R.id.content_main, fragment).commit();
+            fragmentManager.beginTransaction().replace(R.id.content_main, fragment,"QR").commit();
         }
 
 

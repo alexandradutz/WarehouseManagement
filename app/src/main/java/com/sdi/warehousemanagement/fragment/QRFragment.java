@@ -67,6 +67,7 @@ public class QRFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
         barcodeReader = (BarcodeReader)m_navActivity.getSupportFragmentManager().findFragmentById(R.id.barcode_scanner);
+        setHasOptionsMenu(false);
     }
 
     @Override

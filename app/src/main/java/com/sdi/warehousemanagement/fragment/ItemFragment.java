@@ -8,6 +8,8 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -88,6 +90,18 @@ public class ItemFragment extends Fragment {
         return view;
     }
 
+    public void filterSearch(String searchString){
+        HashMap<String, Product> products = new HashMap<>();
+        List<Product> prodList = dbService.getAllProducts();
+        for(Product p : prodList) {
+            if(p.getName().contains(searchString))
+                products.put(p.getProduct_code(), p);
+        }
+        RecyclerView recyclerView = (RecyclerView)getActivity().findViewById(R.id.list);
+        recyclerView.setAdapter(new MyItemRecyclerViewAdapter(products, mListener, getActivity()));
+    }
+
+
 
     @Override
     public void onAttach(Context context) {
@@ -105,6 +119,7 @@ public class ItemFragment extends Fragment {
         super.onDetach();
         mListener = null;
     }
+
 
     /**
      * This interface must be implemented by activities that contain this
